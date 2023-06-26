@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="9928f09b-99d6-4acc-9fb5-86a362e0e331" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="circleci-cicdFlow" doc:id="b4379096-4a94-4ce8-8d92-243e88d3b2bc" >
+		<http:listener doc:name="Listener" doc:id="5c9b8735-24b3-4b01-8254-cd60a79cfc84" config-ref="HTTP_Listener_config" path="/ci"/>
+		<ee:transform doc:name="Transform Message" doc:id="f91af52c-ab80-442d-87ac-cbea73427352" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"Circle Ci deployment"]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="5eed9e5d-0925-4c14-b52c-53672f205f15" message="#[payload]"/>
+	</flow>
+</mule>
